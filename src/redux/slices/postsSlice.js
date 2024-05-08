@@ -52,7 +52,7 @@ const postSlice = createSlice({
             const post = action.payload ;
         //    console.log("like post => ",post) ; 
            const index = state?.userProfile?.posts?.findIndex(item => item._id ===post._id) ; 
-            if(index !=undefined && index !=-1) {
+            if(index !== undefined && index !== -1) {
                 state.userProfile.posts[index] = post ; 
             } 
         })

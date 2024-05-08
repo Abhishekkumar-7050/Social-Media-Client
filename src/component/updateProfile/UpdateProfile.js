@@ -3,12 +3,23 @@ import dummyuserImg from "../../assets/user.png";
 import "./UpdateProfile.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMyProfile } from "../../redux/slices/appConfigSlice";
+import { axiosClient } from "../../utils/axiosClient";
+import { setLoading } from "../../redux/slices/appConfigSlice";
+import { removeItem } from "../../utils/localStorageManager";
+import {  useNavigate } from "react-router-dom";
+import { KEY_ACCESS_TOKEN } from "../../utils/localStorageManager";
+import { showToast } from "../../redux/slices/appConfigSlice";
+import { TOAST_FAILURE } from "../../App";
+import { TOAST_SUCCESS } from "../../App";
+
 function UpdateProfile() {
   const myProfile = useSelector((state) => state.appConfigReducer.myProfile);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [userImg, setUserImg] = useState("");
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
   // in starting value is find in name bio
   // console.log(" my profile data",myProfile);
 
@@ -39,6 +50,39 @@ function UpdateProfile() {
       userImg
     }));
   }
+
+  async function handelDeleteAcount(){
+    try {
+      const choice = prompt("type yes to delete , otherwise no ") ; 
+      if(choice === "yes") {
+          dispatch(setLoading(true));
+              await axiosClient.delete('/user') ; 
+              dispatch(showToast({
+              type:TOAST_SUCCESS , 
+              message :"user has been deleted successfully"
+          })) ;
+          removeItem(KEY_ACCESS_TOKEN) ; 
+          navigate('/login')  ;
+      }
+      else {
+          dispatch(showToast({
+              type:TOAST_SUCCESS , 
+              message :"ooppss you saved" 
+          })) ;
+      }
+      
+
+  } catch (error) {
+      dispatch(showToast({
+          type:TOAST_FAILURE , 
+          message :error
+        })) ;
+  }finally{
+      dispatch(setLoading(false));
+  }
+  }
+
+
 
   return (
     <div className="UpdateProfile">
@@ -75,7 +119,7 @@ function UpdateProfile() {
             <input type="submit" className="btn-primary" onClick={handleSubmit} />
           </form>
 
-          <button className="delete-account btn-primary">Delete Acount</button>
+          <button className="delete-account btn-primary"  onClick={handelDeleteAcount} >Delete Acount</button>
         </div>
       </div>
     </div>

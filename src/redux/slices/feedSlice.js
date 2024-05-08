@@ -42,12 +42,12 @@ const feedSlice = createSlice({
     } ,  
     extraReducers : (builder) =>{
         builder.addCase(getFeedData.fulfilled , (state , action) =>{
-            state.feedData = action.payload ;
+            state.feedData = action.payload;
         })
         .addCase(likeAndUnlike.fulfilled , (state , action) =>{
             const post = action.payload ;
             const index = state?.feedData?.posts?.findIndex(item => item._id ===post._id) ; 
-            if(index !=undefined &&  index !=-1) {
+            if(index !== undefined &&  index !==-1) {
                 state.feedData.posts[index] = post ; 
             } 
         })
@@ -56,7 +56,7 @@ const feedSlice = createSlice({
             const index = state?.feedData?.followings?.findIndex(item => item._id === user._id) ; 
         //    const index2 = state?.feedData?.suggestions?.findIndex(item => item._id ===user._id) ; 
 
-            if(index !=undefined &&  index !=-1) {
+            if(index !== undefined &&  index !== -1) {
                 state.feedData.followings.splice(index , 1 ) ; 
               //  state.feedData.suggestions.push(user ) ; 
             } 
